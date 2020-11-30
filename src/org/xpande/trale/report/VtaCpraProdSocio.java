@@ -53,10 +53,10 @@ public class VtaCpraProdSocio extends SvrProcess {
                     else if (name.trim().equalsIgnoreCase("C_Currency_ID")){
                         this.cCurrencyID = ((BigDecimal)para[i].getParameter()).intValueExact();
                     }
-                    else if (name.equalsIgnoreCase("ReportType")){
+                    else if (name.equalsIgnoreCase("TipoRepVtaCpra")){
                         if (para[i].getParameter() != null) this.ReportType = ((String)para[i].getParameter()).trim();
                     }
-                    else if (name.equalsIgnoreCase("ReportCurrencyType")){
+                    else if (name.equalsIgnoreCase("TipoCurVtaCpra")){
                         if (para[i].getParameter() != null) this.ReportCurrencyType = ((String)para[i].getParameter()).trim();
                     }
                     else if (name.trim().equalsIgnoreCase("DateTrx")){
