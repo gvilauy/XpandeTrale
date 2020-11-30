@@ -102,7 +102,8 @@ public class VtaCpraProdSocio extends SvrProcess {
         try{
             String tablaDatos = "ZV_Trale_VtaProdBP";
 
-            action = " insert into " + TABLA_REPORTE + " (ad_client_id, ad_org_id, ad_user_id, m_product_id, c_currency_id, c_bpartner_id, " +
+            action = " insert into " + TABLA_REPORTE + " (ad_client_id, ad_org_id, ad_user_id, TipoRepVtaCpra, " +
+                    " TipoCurVtaCpra, datetrx, m_product_id, c_currency_id, c_bpartner_id, " +
                     "codigobp, nombrebp, qtyentered, totalamt)" ;
 
             if (this.ReportType.equalsIgnoreCase("VENTA")){
@@ -132,8 +133,10 @@ public class VtaCpraProdSocio extends SvrProcess {
                 }
             }
 
-            sql = " select v.ad_client_id, v.ad_org_id, " + this.getAD_User_ID() + ", v.m_product_id, v.c_currency_id, " +
-                    "v.c_bpartner_id, bp.value, bp.name2, " + sumAction +
+            sql = " select v.ad_client_id, v.ad_org_id, " + this.getAD_User_ID() + ", '" + this.ReportType +
+                    "', '" + this.ReportCurrencyType + "', '" + this.startDate + "'::timestamp without time zone, " +
+                    " v.m_product_id, v.c_currency_id, " +
+                    " v.c_bpartner_id, bp.value, bp.name2, " + sumAction +
                     " from " + tablaDatos + " v " +
                     " inner join c_bpartner bp on v.c_bpartner_id = bp.c_bpartner_id " +
                     " inner join m_product prod on v.m_product_id = prod.m_product_id "	+
