@@ -97,29 +97,30 @@ public class VtaUniMed extends SvrProcess {
 
         try{
             action = " insert into " + TABLA_REPORTE + " (ad_client_id, ad_org_id, ad_user_id, c_doctype_id, documentnoref, c_bpartner_id, "
-                    + " c_invoice_id, c_invoiceline_id, datetrx, m_product_id, c_uom_id, qtyinvoiced, linenetamt, c_currency_id, "
+                    + " c_invoice_id, c_invoiceline_id, datetrx, m_product_id, c_uom_id, m_product_category_id, "
+                    + " qtyinvoiced, linenetamt, c_currency_id, "
                     + " c_uom_to_id, qtyentered ) ";
 
             whereClause = " and h.dateinvoiced between '" + this.startDate + "' and '" + this.endDate + "'";
 
             if (this.cBPartnerID > 0) whereClause += " and h.c_bpartner_id =" + this.cBPartnerID;
-            if (this.mProductCategoryID > 0) whereClause += " and prod.m_product_id =" + this.mProductCategoryID;
+            if (this.mProductCategoryID > 0) whereClause += " and prod.m_product_category_id =" + this.mProductCategoryID;
             if (this.cUomID > 0) whereClause += " and l.c_uom_id =" + this.cUomID;
 
             sql = " select h.ad_client_id, h.ad_org_id, " + this.getAD_User_ID() + ", h.c_doctypetarget_id, " +
                     " h.documentno, h.c_bpartner_id, h.c_invoice_id, l.c_invoiceline_id, h.dateinvoiced, "
-                    + " l.m_product_id, prod.c_uom_id, "
-                    + " case when (doc.docbasetype='ARI') then l.qtyinvoiced else (l.qtyinvoiced * -1) end as qtyinvoiced, "
-                    + " case when (doc.docbasetype='ARI') then l.linenetamt else (l.linenetamt * -1) end as linenetamt, "
+                    + " l.m_product_id, prod.c_uom_id, prod.m_product_category_id, "
+                    + " case when (doc.docbasetype='ARI' or doc.docbasetype='API') then l.qtyinvoiced else (l.qtyinvoiced * -1) end as qtyinvoiced, "
+                    + " case when (doc.docbasetype='ARI' or doc.docbasetype='API') then l.linenetamt else (l.linenetamt * -1) end as linenetamt, "
                     + " h.c_currency_id, prod.c_uom_id, "
-                    + " case when (doc.docbasetype='ARI') then l.qtyinvoiced else (l.qtyinvoiced * -1) end as qtyinvoiced2 "
+                    + " case when (doc.docbasetype='ARI' or doc.docbasetype='API') then l.qtyinvoiced else (l.qtyinvoiced * -1) end as qtyinvoiced2 "
                     + " from c_invoice h "
                     + " inner join c_invoiceline l on h.c_invoice_id = l.c_invoice_id "
                     + " inner join m_product prod on l.m_product_id = prod.m_product_id "
                     + " inner join c_doctype doc on h.c_doctypetarget_id = doc.c_doctype_id "
                     + " where h.ad_org_id =" + this.adOrgID
                     + " and h.docstatus='CO' "
-                    + " and h.issotrx='Y' " + whereClause;
+                    + " and h.issotrx ='Y' " + whereClause;
 
             DB.executeUpdateEx(action + sql, null);
 
